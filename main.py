@@ -19,15 +19,15 @@ def make_folder():
 
 
 def get_format():
-    global format
+    global downloadFormat
     while True:
         try:
-            format = int(input("\t1. MP3\n\t2. MP4\n\nEnter a choice (1 - 2): "))
+            downloadFormat = int(input("\t1. MP3\n\t2. MP4\n\nEnter a choice (1 - 2): "))
         except ValueError:
             continue
-        if format == 1 or format == 2:
+        if downloadFormat == 1 or downloadFormat == 2:
             break
-    return format
+    return downloadFormat
 
 
 while True:
@@ -45,16 +45,16 @@ while True:
 if choice == 1:
     video = pytube.YouTube(input("Video link:"))
 
-    format = get_format()
+    downloadFormat = get_format()
 
     destination = desktop_path
     print(f'Downloading: {video.title}...')
-    if format == 1:
+    if downloadFormat == 1:
         video.streams.filter(only_audio=True).first().download(output_path=destination)
         base, ext = os.path.splitext(video)
         new_file = base + '.mp3'
         os.rename(video, new_file)
-    elif format == 2:
+    elif downloadFormat == 2:
         video.streams.filter().first().download(output_path=destination)
 
     print(video.title + " has successfully been downloaded onto your desktop.")
@@ -63,21 +63,21 @@ if choice == 1:
 elif choice == 2:
     playlist = pytube.Playlist(input("Playlist link: "))
 
-    format = get_format()
+    downloadFormat = get_format()
 
     destination = desktop_path + playlist.title
     make_folder()
-    outfiles = []
+    out_files = []
     print(f'Downloading: {playlist.title}...')
-    if format == 1:
+    if downloadFormat == 1:
         for video in playlist.videos:
-            outfiles.append(video.streams.filter(only_audio=True).first().download(output_path=destination))
-        for out_file in outfiles:
+            out_files.append(video.streams.filter(only_audio=True).first().download(output_path=destination))
+        for out_file in out_files:
             base, ext = os.path.splitext(out_file)
             new_file = base + '.mp3'
             os.rename(out_file, new_file)
-    elif format == 2:
+    elif downloadFormat == 2:
         for video in playlist.videos:
-            outfiles.append(video.streams.first().download(output_path=destination))
+            out_files.append(video.streams.first().download(output_path=destination))
 
     print(playlist.title + " has successfully been downloaded onto your desktop.")
